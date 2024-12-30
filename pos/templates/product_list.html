@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Product List{% endblock %}
+{% block content %}
+<h2>Product List</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.product_id }}</td>
+            <td>
+                {% if product.picture %}
+                    <img src="{{ product.picture.url }}" alt="{{ product.name }}" class="img-thumbnail" style="max-width: 100px;">
+                {% else %}
+                    <span>No image</span>
+                {% endif %}
+            </td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ product.stocks }}</td>
+            <td>
+                <a href="{% url 'product-update' product.pk %}" class="btn btn-primary btn-sm">Edit</a>
+                <a href="{% url 'product-delete' product.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                <form method="POST" action="{% url 'cart-add' product.pk %}" class="cart-form d-inline">
+                    {% csrf_token %}
+                    <button class="btn btn-success btn-sm">Add to Cart</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

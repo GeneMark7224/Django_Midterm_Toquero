@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Cart{% endblock %}
+{% block content %}
+<h1 class="text-center">Cart</h1>
+
+{% load custom_filters %}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in cart_items %}
+        <tr>
+            <td>
+                {% if item.product.picture %}
+                    <img src="{{ item.product.picture.url }}" alt="{{ item.product.name }}" class="img-thumbnail" style="max-width: 100px;">
+                {% else %}
+                    <span>No image</span>
+                {% endif %}
+            </td>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.product.price }}</td>
+            <td>{{ item.quantity|multiply:item.product.price }}</td>
+            <td>
+                <form method="POST" action="{% url 'cart-remove' item.pk %}" class="d-inline">
+                    {% csrf_token %}
+                    <button class="btn btn-danger btn-sm">Remove</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Total: {{ total_price }}</h3>
+<div>
+    <a href="{% url 'checkout' %}" class="btn btn-primary">Checkout</a>
+    <a href="{% url 'cart-reset' %}" class="btn btn-warning">Reset Cart</a>
+</div>
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title %}Order Successful{% endblock %}
+{% block content %}
+<h1 class="text-center">order has been successfully placed!</h1>
+<a href="{% url 'pos-view' %}" class="btn btn-primary">Back to POS</a>
+{% endblock %}

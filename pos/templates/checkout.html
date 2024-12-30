@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+<h1 class="text-center">Checkout</h1>
+{% load custom_filters %}
+<h3>Order Summary</h3>
+<form method="POST" action="{% url 'checkout-confirm' %}">
+    {% csrf_token %}
+    
+    <div class="form-group">
+        <label for="customer-name">Customer Name:</label>
+        <input type="text" id="customer-name" name="customer_name" class="form-control" required>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart_items %}
+            <tr>
+                <td>
+                    {% if item.product.picture %}
+                        <img src="{{ item.product.picture.url }}" alt="{{ item.product.name }}" class="img-thumbnail" style="max-width: 100px;">
+                    {% else %}
+                        <span>No image</span>
+                    {% endif %}
+                </td>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.product.price }}</td>
+                <td>{{ item.quantity|multiply:item.product.price }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3> Total:  {{ total_price }}</h3>
+
+    <a href="{% url 'pos-view' %}" class="btn btn-success">Cancel</a>
+    <button type="submit" class="btn btn-primary">Confirm</button>
+</form>
+{% endblock %}
